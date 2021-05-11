@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<title>Auto Home</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+  crossorigin="anonymous" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+  crossorigin="anonymous">
+  <style>
+      @import url("https://fonts.googleapis.com/css?family=Acme|Lobster|Nunito|Patua+One|Rubik|Sniglet");
+
+      html {
+      min-height: 100%;
+      }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+          margin: 0;
+          font-family: "Nunito light", sans-serif;
+        }
+
+        .top-container {
+          background-color: #f1f1f1;
+          padding: 30px;
+          text-align: center;
+        }
+
+        .header {
+          padding: 10px 25px;
+          background: #343e3d;
+          color: #f1f1f1;
+        }
+
+        .content {
+          padding: 16px;
+        }
+
+        .sticky {
+          position: fixed;
+          top: 0;
+          width: 100%;
+        }
+
+        .sticky + .content {
+          padding-top: 102px;
+        }
+
+        .font {
+         padding-left: 100px;
+         padding-top: 0px;
+         font-size: 40px;
+         }
+
+        header h1 {
+          text-align: center;
+          color: #f93a45;
+          font-style: italic;
+        }
+
+        .msg {
+           font-size: 25px;
+           font-style: italic;
+        }
+
+        .data {
+          width: 45%;
+          float: right;
+          margin-top: 115px;
+          margin-bottom: 115px;
+          margin-right: 20px;
+          margin-left: 20px;
+        }
+
+        .video {
+          width: 45%;
+          float: left;
+          margin-top: 40px;
+          margin-bottom: 115px;
+          margin-right: 20px;
+          margin-left: 20px;
+        }
+
+        table, th, td {
+          text-align: center;
+          padding: 5px;
+          border: 1px solid #226CE0;
+          border-collapse: collapse;
+          overflow: auto;
+        }
+
+        th {
+          background-color: #226CE0;
+          color: #e9fffd;
+        }
+
+        .graph {
+          margin: 50px 100px;
+          padding-top: 50px;
+          padding-bottom: 50px;
+          padding-left: 100px;
+          padding-right: 100px;
+        }
+
+
+        footer {
+          text-align: center;
+          padding: 10px;
+          background-color: #8c1c13;
+          color: white;
+        }
+
+</style>
+</head>
+
+<body>
+
+<div class="header" id="myHeader">
+  <h2>Smart Home</h2>
+</div>
+
+<div class="main">
+    <div class="video">
+        <h2 style="padding-top: 20px; color:#8c1c13; text-align: center; font-size:40px;" >Hi {{ current_user.user }}</h2>
+        <h3 style="border: 5px solid #343e3d;  "><img src="{{ url_for('video_feed') }}" width="100%"></h3>
+    </div>
+
+<div class="data">
+    <table class='dtab' style="width:100%">
+        <tr>
+        <th>Temperature</th>
+        <th>Light</th>
+        </tr>
+        {% for i in range(labels[-1]+1) %}
+        <tr>
+        <td>{{ t[i] }}</td>
+        <td>{{ l[i] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</div>
+
+<div class="graph">
+<canvas id="plot" style="width: 100%; background-color: #FFE6C3; height:400px;"></canvas>
+</div>
+
+<div class="content">
+
+
+
+</div>
+
+<footer>
+    <p> MSM18B012___MSM18B013___MSM18B050___MSM19B023___MSM19B032 </p>
+</footer>
+
+<script>
+window.onscroll = function() {myFunction()};
+
+var header = document.getElementById("myHeader");
+var sticky = header.offsetTop;
+
+function myFunction() {
+  if (window.pageYOffset > sticky) {
+    header.classList.add("sticky");
+  } else {
+    header.classList.remove("sticky");
+  }
+}
+
+
+var ctx = document.getElementById("plot").getContext("2d");
+    var lineChart = new Chart(ctx, {
+       type: "line",
+       data: {
+          labels: {{ labels | safe }},
+          datasets: [
+            {
+              label: "Temperature",
+              data: {{ t | safe }},
+              borderColor: "#226CE0",
+              fill: false,
+            },
+            {
+              label: "Light",
+              data: {{ l | safe }},
+              borderColor: "#8fb339",
+              fill: false,
+            }
+          ]
+       },
+       options: {
+         responsive: false
+       }
+    });
+
+</script>
+
+</body>
+</html>

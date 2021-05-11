@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>STREAM</title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+    crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+    crossorigin="anonymous">
+    <style>
+        @import url("https://fonts.googleapis.com/css?family=Acme|Lobster|Patua+One|Rubik|Sniglet");
+
+        html {
+        min-height: 100%;
+        }
+
+        body {
+        <!--
+        background-image: linear-gradient(#e230e2, #770e0e);
+        -->
+        }
+        * {
+          box-sizing: border-box;
+        }
+
+        a {
+          font-family: var(--Sniglet-font);
+          font-size: 0.9em;
+          color: whitesmoke;
+        }
+
+        .row .col-md-7 {
+          padding: 22vmin 1vmin;
+          padding-bottom: 35vmin;
+        }
+
+        .row .col-md-8 {
+          padding: 2vmin 1vmin;
+          padding-bottom: 40vmin;
+        }
+        .row .col-md-4 {
+          padding: 22vmin 1vmin;
+          padding-bottom: 40vmin;
+        }
+
+        .row .col-md-5 {
+          padding: 4.2vmin 1vmin;
+        }
+
+        .row .col-md-5 img {
+          width: 90%;
+        }
+
+        header {
+          background: #ff512f;
+          /* fallback for old browsers */
+          background: var(--bggradient);
+        }
+
+        .container .col-md-7 {
+          font-family: "Rubik", sans-serif;
+        }
+
+        .container .col-md-7 h6 {
+        }
+
+        .container .col-md-7 h1 {
+          font-size: 8.5vmin;
+          font-weight: bold;
+          padding: 0.1em 0em;
+        }
+
+        .container .col-md-7 p {
+          padding: 1vmin 5vmin;
+        }
+
+
+        .font {
+         padding-left: 100px;
+         padding-top: 0px;
+         font-size: 40px;
+         }
+
+        header h1 {
+          text-align: center;
+          color: #f93a45;
+          font-style: italic;
+        }
+        .msg {
+           font-size: 25px;
+           font-style: italic;
+        }
+
+        .main {
+           width: 100%;
+           border: 10px solid black;
+        }
+
+        .data {
+          width: 45%;
+          float: right;
+          margin-top: 115px;
+          margin-bottom: 115px;
+          margin-right: 20px;
+          margin-left: 20px;
+        }
+
+        .video {
+          width: 45%;
+          float: left;
+          margin-top: 40px;
+          margin-bottom: 115px;
+          margin-right: 20px;
+          margin-left: 20px;
+        }
+
+        table, th, td {
+          text-align: center;
+          padding: 5px;
+          border: 1px solid black;
+          border-collapse: collapse;
+          overflow: auto;
+        }
+
+        th {
+          background-color: #29526d;
+          color: #cffef9;
+        }
+
+        .graph {
+          margin: 50px 100px;
+          padding-top: 50px;
+          padding-bottom: 50px;
+          padding-left: 100px;
+          padding-right: 100px;
+        }
+
+        .head_topic {
+
+        )
+
+        .foot_topic {
+
+        )
+
+    </style>
+</head>
+<body>
+
+<div class="head_topic">
+
+</div>
+
+<div class="main">
+    <div class="video">
+        <h2 style="padding-top: 20px; color:#663300; text-align: center; font-size:40px;" >Hi {{ current_user.user }}</h2>
+        <h3 style="border: 5px solid #430043;  "><img src="{{ url_for('video_feed') }}" width="100%"></h3>
+    </div>
+   <div class="data">
+        <table class='dtab' style="width:100%">
+            <tr>
+            <th>Temperature</th>
+            <th>Light</th>
+            </tr>
+            {% for i in range(labels[-1]+1) %}
+            <tr>
+            <td>{{ t[i] }}</td>
+            <td>{{ l[i] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+   </div>
+</div>
+<div class="graph">
+    <canvas id="plot" style="width: 100%; background-color: #ffff33; height:400px;"></canvas>
+</div>
+
+<div class="foot_topic">
+
+</div>
+
+<script>
+    var ctx = document.getElementById("plot").getContext("2d");
+    var lineChart = new Chart(ctx, {
+       type: "line",
+       data: {
+          labels: {{ labels | safe }},
+          datasets: [
+            {
+              label: "Temperature",
+              data: {{ t | safe }},
+              borderColor: "#3e95cd",
+              fill: false,
+            },
+            {
+              label: "Light",
+              data: {{ l | safe }},
+              borderColor: "#c45850",
+              fill: false,
+            }
+          ]
+       },
+       options: {
+         responsive: false
+       }
+    });
+</script>
+
+</body>
+</html>
